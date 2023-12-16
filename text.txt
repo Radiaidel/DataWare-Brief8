@@ -1,0 +1,52 @@
+project-root-directory/
+│
+├── app/
+│   ├── controllers/
+│   │   ├── AuthController.php
+│   │   ├── ProjectController.php
+│   │   ├── TeamController.php
+│   │   ├── ScrumMasterController.php
+│   │   └── UserController.php
+│   │
+│   ├── models/
+│   │   ├── Project.php
+│   │   ├── Team.php
+│   │   ├── User.php
+│   │   └── ScrumMaster.php
+│   │
+│   ├── views/
+│   │   ├── auth/
+│   │   │   ├── login.php
+│   │   │   ├── register.php
+│   │   │   └── dashboard.php
+│   │   │
+│   │   ├── project/
+│   │   │   ├── index.php
+│   │   │   ├── create.php
+│   │   │   └── edit.php
+│   │   │
+│   │   ├── team/
+│   │   │   ├── index.php
+│   │   │   ├── create.php
+│   │   │   ├── edit.php
+│   │   │   └── manage-members.php
+│   │   │
+│   │   ├── layouts/
+│   │   │   ├── header.php
+│   │   │   └── footer.php
+│   │   │
+│   │   └── home.php
+│   │
+│   ├── Core.php
+│   └── Database.php
+│
+├── public/
+│   ├── css/
+│   │   └── style.css
+│   │
+│   ├── js/
+│   │   └── script.js
+│   │
+│   └── index.php
+│
+└── .gitignore
