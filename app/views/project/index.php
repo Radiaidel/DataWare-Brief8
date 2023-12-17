@@ -7,7 +7,8 @@
 
 <body class="bg-gray-200 ">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-12 mt-10 mx-auto">
-        <?php if (!empty($projects)) : ?>
+        <?php if (!empty($projects)) : 
+ ?>
             <?php foreach ($projects as $project) : ?>
                 <form action="question_project.php" method="post">
                     <input hidden type="text" name="id_project" value="<?php echo $project['Id_Project']; ?>">
