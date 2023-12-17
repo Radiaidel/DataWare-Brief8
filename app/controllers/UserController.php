@@ -80,7 +80,7 @@ class UserController
                 // Perform sign-in
                 try {
                     if ($this->userModel->signIn()) {
-                        header("Location: app/views/project/index.php?action=project");
+                        include_once("index.php?action=project");
                         exit();
                     } else {
                         $message = "Mot de passe incorrect.";
