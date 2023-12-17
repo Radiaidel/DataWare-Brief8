@@ -4,6 +4,40 @@ require_once 'app/Database.php';
 class Project
 {
     private $conn;
+    private $idProject;
+    private $projectName;
+    private $projectDescription;
+    private $projectStatus;
+    private $createdAt;
+    private $deadline;
+    private $idUser;
+
+
+
+    public function setProjectName($projectName)
+    {
+        $this->projectName = $projectName;
+    }
+
+    public function setProjectDescription($projectDescription)
+    {
+        $this->projectDescription = $projectDescription;
+    }
+
+    public function setProjectStatus($projectStatus)
+    {
+        $this->projectStatus = $projectStatus;
+    }
+
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+    }
+
+    public function setIdUser($idUser)
+    {
+        $this->idUser = $idUser;
+    }
 
     public function __construct()
     {
@@ -26,20 +60,16 @@ class Project
         ";
 
         $stmt = $this->conn->prepare($sql);
-
-        if (!$stmt) {
-            die("Erreur de préparation de la requête.");
-        }
-
+      
         $stmt->bindParam(":userId", $userId, PDO::PARAM_INT);
-
         if (!$stmt->execute()) {
             die("Erreur d'exécution de la requête.");
         }
-
+        
+        // die("Erreur d'exécution de la requête.");
         $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
 
+        $stmt->closeCursor();
         return $projects;
     }
 }

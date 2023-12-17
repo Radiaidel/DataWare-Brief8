@@ -21,7 +21,7 @@
     ?>
         <h2 class="text-2xl text-center mb-6">Sign In</h2>
 
-        <form name="signInForm" action="index.php?action=signin" method="POST">
+        <form name="signInForm" action="index.php?action=project" method="POST">
             <!--Email input-->
             <div class="mb-4">
                 <input type="email" id="email" name="email" placeholder="Email"
