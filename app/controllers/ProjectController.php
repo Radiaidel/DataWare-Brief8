@@ -11,9 +11,10 @@
         }
 
         public function handleProjectsForUser($userId)
-        {
+        {            
             $projects = $this->projectModel->getProjectsForUser($userId);
-            include("app/views/project/index.php"); // Include the view file and pass the projects variable
+            include_once("app/views/project/index.php"); // Include the view file and pass the projects variable
+
         }
     }
 

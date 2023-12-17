@@ -20,13 +20,12 @@ class Core
                 $userController = new UserController($userModel);
                 $userController->handleSignIn();
                 break;
-                case 'project':
-                    $projectModel = new Project(); // Create an instance of Project model
-                    $projectController = new ProjectController($projectModel); // Create an instance of ProjectController
-                    session_start();
-                    $userId = $_SESSION['user_id'];
-                    $projectController->handleProjectsForUser($userId); // Handle projects for the logged-in user
-                    break;
+            case 'project':
+                session_start();
+                $userId = $_SESSION['user_id'];
+                $projectController = new ProjectController(new Project());
+                $projectController->handleProjectsForUser($userId);
+                break;
             // Add other cases as needed
             default:
                 $userModel = new User();
