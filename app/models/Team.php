@@ -18,14 +18,13 @@ class Team
     public function getAllTeams()
     {
         $query = "SELECT team.*, users.username AS scrum_master_name FROM team JOIN users ON team.id_user = users.id_user";
-        $result = mysqli_query($this->conn, $query);
-
+        $stmt = $this->conn->prepare($query);
+$stmt->execute();
         $teams = [];
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row =$stmt->fetchAll(PDO::FETCH_ASSOC)) {
             $teams[] = $row;
         }
 
-        mysqli_free_result($result);
         return $teams;
     }
 

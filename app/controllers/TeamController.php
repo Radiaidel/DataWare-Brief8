@@ -17,6 +17,5 @@ class TeamController
         include("app/views/team/index.php"); // Include the view file and pass the teams variable
     }
 
-    // Add other methods as needed
 }
 ?>
