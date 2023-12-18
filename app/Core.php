@@ -25,6 +25,10 @@ class Core
                 $userId = $_SESSION['user_id'];
                 $projectController = new ProjectController(new Project());
                 $projectController->handleProjectsForUser($userId);
+                break; 
+            case 'create_project':
+                $projectController = new ProjectController(new Project());
+                $projectController->CreateProject();
                 break;
             // Add other cases as needed
             default:

@@ -28,7 +28,9 @@ class Project
     {
         $this->projectStatus = $projectStatus;
     }
-
+    public function setCreatedAt($created_at){
+        $this->createdAt = $created_at;
+    }
     public function setDeadline($deadline)
     {
         $this->deadline = $deadline;
@@ -71,6 +73,26 @@ class Project
 
         $stmt->closeCursor();
         return $projects;
+    }
+    public function CreateProject(){
+        try{
+
+            $query="INSERT INTO `project`(`project_name`, `project_description`, `project_status`, `created_at`, `deadline`, `id_user`) VALUES (?, ?, ?, ?, ?, ?);";
+            $stmt=$this->conn->prepare($query);
+
+            $stmt->bindParam(1, $this->projectName);
+            $stmt->bindParam(2, $this->projectDescription);
+            $stmt->bindParam(3, $this->projectStatus);
+            $stmt->bindParam(4, $this->createdAt);
+            $stmt->bindParam(5, $this->deadline);
+            $stmt->bindParam(6, $this->idUser);
+
+            $stmt->execute();
+            $stmt->closeCursor();
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 }
 ?>

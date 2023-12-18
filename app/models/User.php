@@ -104,5 +104,39 @@ class User
             return false;
         }
     }
+
+    public function getScrumMasters()
+    {
+        $sql = "SELECT id_user,email FROM users WHERE role <> 'po'";
+        $stmt = $this->conn->prepare($sql);
+
+        if (!$stmt->execute()) {
+            die("Erreur d'exécution de la requête.");
+        }
+
+        $scrumMasters = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        return $scrumMasters;
+    }
+    public function New_scrum_master($id_user)
+    {
+        $queryRole = "SELECT role FROM users WHERE id_user = ?";
+        $stmtRole = $this->conn->prepare($queryRole);
+        $stmtRole->execute([$id_user]);
+
+        $currentRole = $stmtRole->fetchColumn();
+
+        if ($currentRole == 'user') {
+            $newRole = 'sm';
+
+            $queryUpdateRole = "UPDATE users SET role = ? WHERE id_user = ?";
+            $stmtUpdateRole = $this->conn->prepare($queryUpdateRole);
+            $stmtUpdateRole->execute([$newRole, $id_user]);
+
+        }
+    }
+
+
 }
 ?>
