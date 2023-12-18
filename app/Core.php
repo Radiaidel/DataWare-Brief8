@@ -24,11 +24,22 @@ class Core
                 session_start();
                 $userId = $_SESSION['user_id'];
                 $projectController = new ProjectController(new Project());
-                $projectController->handleProjectsForUser($userId);
-                break; 
+
+                if (isset($_GET["showUpdateForm"]) && $_GET["showUpdateForm"] == 1) {
+                    $projectController->RequestUpdate();
+
+                } else {
+
+                    $projectController->handleProjectsForUser($userId);
+                }
+                break;
             case 'create_project':
                 $projectController = new ProjectController(new Project());
                 $projectController->CreateProject();
+                break;
+            case 'UpdateProject':
+                $projectController = new ProjectController(new Project());
+                $projectController->UpdateProject();
                 break;
             // Add other cases as needed
             default:
