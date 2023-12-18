@@ -138,5 +138,19 @@ class Project
             throw new Exception("Erreur lors de la mise à jour du projet : " . $e->getMessage());
         }
     }
+
+    public function DeleteProject(){
+        try {
+            $sql = "DELETE FROM project WHERE Id_Project = :id_projet";
+            $stmt = $this->conn->prepare($sql);
+    
+            $stmt->bindParam(':id_projet', $this->idProject, PDO::PARAM_INT);
+            $stmt->execute();
+                        
+            $stmt->closeCursor();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression du projet : " . $e->getMessage());
+        }
+    }
 }
 ?>

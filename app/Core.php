@@ -41,6 +41,11 @@ class Core
                 $projectController = new ProjectController(new Project());
                 $projectController->UpdateProject();
                 break;
+
+                case 'deleteproject':
+                    $projectController = new ProjectController(new Project());
+                    $projectController->DeleteProject();
+                    break;
             // Add other cases as needed
             default:
                 $userModel = new User();
