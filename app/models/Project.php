@@ -13,7 +13,10 @@ class Project
     private $idUser;
 
 
-
+    public function setProjectId($projectId)
+    {
+        $this->idProject = $projectId;
+    }
     public function setProjectName($projectName)
     {
         $this->projectName = $projectName;
@@ -92,6 +95,47 @@ class Project
 
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
+        }
+    }
+    public function GetProject(){
+        try{
+
+            $query="SELECT * FROM project  WHERE Id_Project=? ;";
+            $stmt=$this->conn->prepare($query);
+
+            $stmt->bindParam(1, $this->idProject);
+
+            $stmt->execute();
+            $project = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt->closeCursor();
+            return $project;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function UpdateProject(){
+
+        
+        try {
+            // Utilisez une requête préparée pour mettre à jour le projet
+            $sql = "UPDATE project SET project_name = ?, project_description = ?, project_status = ?, created_at = ?, deadline = ?, id_user = ? WHERE id_project = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(1, $this->projectName);
+            $stmt->bindParam(2, $this->projectDescription);
+            $stmt->bindParam(3, $this->projectStatus);
+            $stmt->bindParam(4, $this->createdAt);
+            $stmt->bindParam(5, $this->deadline);
+            $stmt->bindParam(6, $this->idUser);
+            $stmt->bindParam(7, $this->idProject);
+            
+            $stmt->execute();
+            $stmt->closeCursor();
+        } catch (PDOException $e) {
+            // Gérez les erreurs PDO ici (log, affichage, etc.)
+            throw new Exception("Erreur lors de la mise à jour du projet : " . $e->getMessage());
         }
     }
 }
