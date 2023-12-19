@@ -100,6 +100,21 @@ class ProjectController
         }
     }
 
+    public function DeleteProject(){
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $projectId = $_POST["id_project"];
+            try {
+                $this->projectModel->setProjectId($projectId);
+                $this->projectModel->DeleteProject();
+                $message = "Projet a été supprime avec succès";
+                header("Location: index.php?action=project");
+                exit;
+            } catch (Exception $e) {
+                $message = "Erreur lors de la creation du projet. Veuillez réessayer.";
+            }
+        }
+    }
+
 }
 
 ?>
