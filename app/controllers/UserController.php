@@ -80,7 +80,7 @@ class UserController
                 // Perform sign-in
                 try {
                     if ($this->userModel->signIn()) {
-                        header("Location: index.php?action=project");
+                        header("Location: index.php?action=team");
                         exit();
                     } else {
                         $message = "Mot de passe incorrect.";

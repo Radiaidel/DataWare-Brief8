@@ -1,6 +1,7 @@
 <?php
 require_once "app/controllers/UserController.php";
 require_once "app/controllers/ProjectController.php";
+require_once "app/controllers/TeamController.php";
 
 
 class Core
@@ -42,10 +43,18 @@ class Core
                 $projectController->UpdateProject();
                 break;
 
-                case 'deleteproject':
-                    $projectController = new ProjectController(new Project());
-                    $projectController->DeleteProject();
-                    break;
+            case 'deleteproject':
+                $projectController = new ProjectController(new Project());
+                $projectController->DeleteProject();
+                break;
+            case 'team':
+                session_start();
+                $userId = $_SESSION['user_id'];
+                $teamController = new TeamController(new Team());
+
+                $teamController->handleTeamsForUser($userId);
+
+                break;
             // Add other cases as needed
             default:
                 $userModel = new User();
