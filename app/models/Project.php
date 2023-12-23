@@ -164,7 +164,7 @@ class Project
             $sql = "DELETE FROM project WHERE Id_Project = :id_projet";
             $stmt = $this->conn->prepare($sql);
             
-            die($this->idProject);
+            // die($this->idProject);
             $stmt->bindParam(':id_projet', $this->idProject, PDO::PARAM_INT);
             $stmt->execute();
                         
