@@ -61,39 +61,39 @@ class UserController
     }
 
 
-    public function handleSignIn()
-    {
-        $message = "";
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $email = $_POST["email"];
-            $password = $_POST["password"];
+        public function handleSignIn()
+        {
+            $message = "";
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $email = $_POST["email"];
+                $password = $_POST["password"];
 
-            // Set user data for sign-in
-            $this->userModel->setEmail($email);
-            $this->userModel->setPassword($password);
+                // Set user data for sign-in
+                $this->userModel->setEmail($email);
+                $this->userModel->setPassword($password);
 
-            if (!$this->userModel->emailExists()) {
-                $message = "Cet email n'existe pas. Veuillez vous inscrire.";
-                include_once "app/views/auth/login.php";
+                if (!$this->userModel->emailExists()) {
+                    $message = "Cet email n'existe pas. Veuillez vous inscrire.";
+                    include_once "app/views/auth/login.php";
 
-            } else {
-                // Perform sign-in
-                try {
-                    if ($this->userModel->signIn()) {
-                        header("Location: index.php?action=team");
-                        exit();
-                    } else {
-                        $message = "Mot de passe incorrect.";
-                        include_once "app/views/auth/login.php";
+                } else {
+                    // Perform sign-in
+                    try {
+                        if ($this->userModel->signIn()) {
+                            header("Location: index.php?action=project");
+                            exit();
+                        } else {
+                            $message = "Mot de passe incorrect.";
+                            include_once "app/views/auth/login.php";
+                        }
+                    } catch (Exception $e) {
+                        $message = "Error: " . $e->getMessage();
                     }
-                } catch (Exception $e) {
-                    $message = "Error: " . $e->getMessage();
                 }
+            }else {
+                include_once "app/views/auth/login.php";
             }
-        }else {
-            include_once "app/views/auth/login.php";
         }
-    }
 
 }
 ?>

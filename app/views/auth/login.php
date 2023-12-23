@@ -11,16 +11,16 @@
     <title>Sign In</title>
 </head>
 
-<body class="bg-gray-100 h-screen flex items-center justify-center">
-
+<body class="bg-cover bg-center h-screen flex items-center justify-center"
+    style="background-image: url('/dataware-Brief9/Images/geometric-background-with-copy-space.jpg');">
     <div class="bg-white p-8 rounded w-96 shadow-md max-w-md rounded-2xl">
-    <?php
-    if(isset($message)) {
-        echo "<p>$message</p>";
-    }
-    ?>
-        <h2 class="text-2xl text-center mb-6">Sign In</h2>
 
+        <h2 class="text-2xl text-center mb-6">Sign In</h2>
+        <?php
+        if (isset($message)) {
+            echo "<p>$message</p>";
+        }
+        ?>
         <form name="signInForm" action="" method="POST">
             <!--Email input-->
             <div class="mb-4">
