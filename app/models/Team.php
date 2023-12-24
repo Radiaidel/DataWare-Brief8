@@ -141,6 +141,69 @@ class Team
         return $teamsData;
     }
 
+    public function getProjects($userId)
+    {
+        $query = "SELECT Id_Project, project_name FROM project where id_user = :userId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId);
+
+        $projects = array();
+
+        if ($stmt->execute()) {
+            $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $projects;
+    }
+
+    public function getTeamMembers()
+    {
+        $query = "SELECT id_user, email FROM users WHERE role='user'";
+        $stmt = $this->conn->prepare($query);
+
+        $members = array();
+
+        if ($stmt->execute()) {
+            $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $members;
+    }
+
+
+    public function createTeam($teamName, $userId, $projectId, $teamMembers)
+    {
+        // Insérer l'équipe dans la table team
+        $insertTeamQuery = "INSERT INTO team (team_name, created_at, id_user, id_project) VALUES (?, NOW(), ?, ?)";
+        $stmt = $this->conn->prepare($insertTeamQuery);
+        $stmt->bindParam(1, $teamName, PDO::PARAM_STR);
+        $stmt->bindParam(2, $userId, PDO::PARAM_INT);
+        $stmt->bindParam(3, $projectId, PDO::PARAM_INT);
+
+        if (!$stmt->execute()) {
+            // Gérer l'erreur si nécessaire
+            return false;
+        }
+
+        $teamId = $this->conn->lastInsertId();
+
+        // Insérer les membres dans la table in_team
+        $insertMembersQuery = "INSERT INTO in_team (id_user, id_team) VALUES (?, ?)";
+        $stmtMembers = $this->conn->prepare($insertMembersQuery);
+
+        foreach ($teamMembers as $memberId) {
+            $stmtMembers->bindParam(1, $memberId, PDO::PARAM_INT);
+            $stmtMembers->bindParam(2, $teamId, PDO::PARAM_INT);
+
+            if (!$stmtMembers->execute()) {
+                // Gérer l'erreur si nécessaire
+                return false;
+            }
+        }
+
+        // L'équipe a été créée avec succès
+        return true;
+    }
 
 }
 ?>
