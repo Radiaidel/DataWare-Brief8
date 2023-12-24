@@ -72,11 +72,10 @@
             </button>
 
             <nav class="space-x-4 hidden sm:flex items-center">
-                <a href="" class="text-white hover:text-gray-300 transition duration-300">Dashboard</a>
-                <a href="./src/action/community.php"
+                <a href="index.php?action=project"
                     class="text-white hover:text-gray-300 transition duration-300">Projects</a>
-                <a href="./src/action/static.php"
-                    class="text-white hover:text-gray-300 transition duration-300">Tasks</a>
+                <a href="index.php?action=teams"
+                    class="text-white hover:text-gray-300 transition duration-300">Teams</a>
                 <button id="logoutBtn" class="text-white px-7 py-2 rounded-full border border-white">
                     <a href="../logout.php" class="text-white">Log Out</a>
                 </button>
@@ -88,10 +87,9 @@
     <div id="burgerOverlay"
         class="fixed py-5 top-18 right-0 w-1/2 h-screen bg-gray-800 bg-opacity-50 z-50 hidden items-center justify-center sm:hidden">
         <nav class="flex flex-col items-center space-y-5">
-            <a href="" class="text-white hover:text-gray-300 transition duration-300">Dashboard</a>
-            <a href="./src/action/community.php"
+            <a href="index.php?action=project"
                 class="text-white hover:text-gray-300 transition duration-300">Projects</a>
-            <a href="./src/action/static.php" class="text-white hover:text-gray-300 transition duration-300">Tasks</a>
+            <a href="index.php?action=teams" class="text-white hover:text-gray-300 transition duration-300">Teams</a>
             <a href="../logout.php" class="text-white hover:text-gray-300 transition duration-300">Log out</a>
         </nav>
     </div>
@@ -161,9 +159,9 @@
                                 </button>
                             </form>
                             <form id="deleteProjectForm" action="index.php?action=deleteproject" method="POST">
-                                <input hidden type="text" name="idproject" value="<?php echo $project['Id_Project']; ?>">
+                                <input type="hidden" name="idproject" value="<?php echo $project['Id_Project']; ?>">
 
-                                <button type="button" id="deleteProjectButton" onclick="confirmDelete()"
+                                <button name="deletebtn" type="submit" id="deleteProjectButton" onclick="confirmDelete()"
                                     class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M19 6L5 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
