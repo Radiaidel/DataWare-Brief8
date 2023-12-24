@@ -53,8 +53,6 @@ class User
         } catch (PDOException $e) {
             $_SESSION['error'] = "Error: " . $e->getMessage();
             return false;
-        } finally {
-            $conn = null;
         }
     }
 
@@ -77,32 +75,32 @@ class User
             }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
-        } finally {
-            $conn = null;
         }
     }
     public function signIn()
     {
-        $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":email", $this->email);
+            $sql = "SELECT * FROM users WHERE email = :email";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":email", $this->email);
 
-        try {
-            $stmt->execute();
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            try {
+                $stmt->execute();
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($this->password, $user['pass_word'])) {
-                // Successfully signed in
-                session_start();
-                $_SESSION['user_id'] = $user['id_user'];
-                return true;
-            } else {
+                if ($user && password_verify($this->password, $user['pass_word'])) {
+                    // Successfully signed in
+                    session_start();
+                    $_SESSION['user_id'] = $user['id_user'];
+                    $_SESSION['role'] = $user['role'];
+
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (PDOException $e) {
+                $message = "Error: " . $e->getMessage();
                 return false;
             }
-        } catch (PDOException $e) {
-            $message = "Error: " . $e->getMessage();
-            return false;
-        }
     }
 
     public function getScrumMasters()

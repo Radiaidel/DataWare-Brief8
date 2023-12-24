@@ -101,10 +101,12 @@ class ProjectController
     }
 
     public function DeleteProject(){
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $projectId = $_POST["id_project"];
+        if ($_SERVER["REQUEST_METHOD"] == "POST"&& isset($_POST["deletebtn"])) {
+            $projectId = $_POST["idproject"];
             try {
                 $this->projectModel->setProjectId($projectId);
+                var_dump($_POST["idproject"]);
+
                 $this->projectModel->DeleteProject();
                 $message = "Projet a été supprime avec succès";
                 header("Location: index.php?action=project");

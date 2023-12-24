@@ -8,31 +8,19 @@
     <!-- Add Tailwind CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title> Registration Form</title>
-    <style>
-        .success {
-            color: green;
-        }
-
-        .error {
-            color: red;
-        }
-
-        .bg-image {
-            background: url(./Images/bg.png);
-        }
-    </style>
 </head>
 
-<body class="bg-gray-200 h-screen flex items-center justify-center ">
+<body class="bg-cover bg-center h-screen flex items-center justify-center"
+    style="background-image: url('/dataware-Brief9/Images/geometric-background-with-copy-space.jpg');">
 
     <div class="bg-white p-8 rounded w-96 shadow-md max-w-md rounded-2xl">
-    <?php
-    if(isset($message)) {
-        echo "<p>$message</p>";
-    }
-    ?>
-        <h2 class="text-2xl text-center mb-6">Sign Up</h2>
 
+        <h2 class="text-2xl text-center mb-6">Sign Up</h2>
+        <?php
+        if (isset($message)) {
+            echo "<p>$message</p>";
+        }
+        ?>
         <form action="index.php?action=signup" method="POST" enctype="multipart/form-data">
             <div class="mt-4">
 
@@ -60,8 +48,8 @@
             <div class="mt-6">
 
                 <!-- <label for="acceptTerms" class="ml-2 text-sm text-gray-600">I accept the <a href="#" class="text-purple-500 font-semibold">Terms of Use</a> & <a href="#" class="text-purple-500 font-semibold">Privacy Policy</a> -->
-                <p class="mt-4 text-gray-600 text-xs text-center">Already have an account ?<a href="./index.php?action=signin"
-                        class="text-blue-500 hover:underline"> Sign in here </a>.</p>
+                <p class="mt-4 text-gray-600 text-xs text-center">Already have an account ?<a
+                        href="./index.php?action=signin" class="text-blue-500 hover:underline"> Sign in here </a>.</p>
             </div>
             <div class="mt-6">
                 <button type="submit"
