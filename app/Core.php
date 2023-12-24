@@ -47,7 +47,7 @@ class Core
                 $projectController = new ProjectController(new Project());
                 $projectController->DeleteProject();
                 break;
-            case 'team':
+            case 'teams':
                 session_start();
                 $userId = $_SESSION['user_id'];
                 $teamController = new TeamController(new Team());
