@@ -129,6 +129,7 @@ class Team
 
                 // Assemble team data
                 $teamsData[] = array(
+                    'Id_Team' => $row['Id_Team'],
                     'team_name' => $row['team_name'],
                     'scrum_master_name' => $row['scrum_master_name'],
                     'team_members' => $teamMembers,
@@ -203,6 +204,99 @@ class Team
 
         // L'équipe a été créée avec succès
         return true;
+    }
+
+
+    // Dans votre modèle Team
+    public function getTeamInfo($teamId)
+    {
+        $query = "SELECT team.*, project.project_name, GROUP_CONCAT(users.email) AS team_members
+                  FROM team
+                  JOIN project ON team.Id_Project = project.Id_Project
+                  LEFT JOIN in_team ON team.Id_Team = in_team.Id_Team
+                  LEFT JOIN users ON in_team.id_user = users.id_user
+                  WHERE team.Id_Team = :teamId
+                  GROUP BY team.Id_Team";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':teamId', $teamId);
+
+        $teamInfo = array();
+
+        if ($stmt->execute()) {
+            $teamInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $teamInfo;
+    }
+    // Dans votre modèle TeamModel
+    public function getMembersOfTeam($teamId)
+    {
+        // Utilisez votre logique pour récupérer les membres de l'équipe en fonction de $teamId
+        // C'est un exemple générique de requête SQL, veuillez l'adapter en fonction de votre schéma
+        $query = "SELECT users.id_user, users.email FROM users
+        INNER JOIN in_team ON users.id_user = in_team.id_user
+        WHERE in_team.Id_Team = :teamId";
+        // Assurez-vous d'utiliser des requêtes préparées pour éviter les attaques par injection SQL
+        $statement = $this->conn->prepare($query);
+        $statement->bindParam(':teamId', $teamId);
+        $statement->execute();
+
+        // Récupérer les résultats de la requête
+        $members = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $members;
+    }
+
+
+    public function updateTeam($teamId, $newTeamName, $newProjectId, $selectedMembers)
+    {
+        try {
+            // Commencez une transaction
+
+            // Mettez à jour le nom de l'équipe et le projet dans la table Team
+            $updateTeamQuery = "UPDATE team SET team_name = :newTeamName, Id_Project = :newProjectId WHERE Id_Team = :teamId";
+            $stmtUpdateTeam = $this->conn->prepare($updateTeamQuery);
+            $stmtUpdateTeam->bindParam(':newTeamName', $newTeamName);
+            $stmtUpdateTeam->bindParam(':newProjectId', $newProjectId);
+            $stmtUpdateTeam->bindParam(':teamId', $teamId);
+            $stmtUpdateTeam->execute();
+
+            // Supprimez d'abord tous les membres de l'équipe de la table in_team
+            $deleteMembersQuery = "DELETE FROM in_team WHERE Id_Team = :teamId";
+            $stmtDeleteMembers = $this->conn->prepare($deleteMembersQuery);
+            $stmtDeleteMembers->bindParam(':teamId', $teamId);
+            $stmtDeleteMembers->execute();
+
+            // Ensuite, insérez les membres sélectionnés dans la table in_team
+            $insertMembersQuery = "INSERT INTO in_team (id_user, Id_Team) VALUES (:idMember, :teamId)";
+            $stmtInsertMembers = $this->conn->prepare($insertMembersQuery);
+
+            foreach ($selectedMembers as $idMember) {
+                $stmtInsertMembers->bindParam(':idMember', $idMember);
+                $stmtInsertMembers->bindParam(':teamId', $teamId);
+                $stmtInsertMembers->execute();
+            }
+
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function DeleteTeam(){
+        try {
+            $sql = "DELETE FROM team WHERE Id_Team= :id_team";
+            $stmt = $this->conn->prepare($sql);
+            
+            // die($this->idProject);
+            $stmt->bindParam(':id_team', $this->idTeam, PDO::PARAM_INT);
+            $stmt->execute();
+                        
+            $stmt->closeCursor();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression de l'equipe : " . $e->getMessage());
+        }
     }
 
 }

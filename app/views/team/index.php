@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects Page</title>
+    <title>Team Page</title>
     <script src="../Javascript/script.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!--icon-->
@@ -15,7 +15,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('addTeamButton').addEventListener('click', function () {
                 document.getElementById('createForm').classList.toggle('hidden');
-                // document.getElementById('ListProjects').classList.toggle('hidden');
                 document.getElementById('ud_team').classList.toggle('hidden');
             });
 
@@ -23,11 +22,8 @@
 
             if (showUpdateFormParam === "1" && updateForm) {
                 document.getElementById('updateForm').classList.toggle('hidden');
-                document.getElementById('addProjectButton').classList.toggle('hidden');
-
-
-                document.getElementById('ListProjects').classList.toggle('hidden');
-                document.getElementById('ud_project').classList.toggle('hidden');
+                document.getElementById('addTeamButton').classList.toggle('hidden');
+                document.getElementById('ud_team').classList.toggle('hidden');
             }
 
             function getParameterByName(name) {
@@ -76,7 +72,7 @@
                     class="text-white hover:text-gray-300 transition duration-300">Projects</a>
                 <a href="index.php?action=team" class="text-white hover:text-gray-300 transition duration-300">Teams</a>
                 <button id="logoutBtn" class="text-white px-7 py-2 rounded-full border border-white">
-                    <a href="../logout.php" class="text-white">Log Out</a>
+                    <a href="index.php?action=Logout" class="text-white">Log Out</a>
                 </button>
             </nav>
         </div>
@@ -159,6 +155,44 @@
                                 <?php echo $team['created_at']; ?>
                             </span>
                         </div>
+                        <?php
+                        if ($_SESSION['role'] == 'sm') {
+                            ?>
+                            <div class="flex justify-center mt-4 space-x-5">
+
+                                <form action="index.php?action=teams&showUpdateForm=1" method="POST">
+                                    <input hidden type="text" name="team_id" value="<?php echo $team['Id_Team']; ?>">
+                                    <button type="submit" id="showUpdateFormButton"
+                                        class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M3 17V21H7L17.59 10.41L13.17 6L3 16.17V17ZM21.41 5.59L18.83 3L20.41 1.41C20.59 1.23 20.8 1.09 21 1.03C21.2 0.97 21.41 0.99 21.59 1.07L23.59 3.07C23.77 3.15 23.91 3.36 23.97 3.57C24.03 3.78 24.01 3.99 23.93 4.17L22.34 6.76L21.41 5.59Z"
+                                                fill="currentColor" />
+                                        </svg>
+                                    </button>
+                                </form>
+                                <form id="deleteteamForm" action="index.php?action=deleteteam" method="POST">
+                                    <input hidden type="text" name="team_id" value="<?php echo $team['Id_Team']; ?>">
+
+                                    <button name="deletebtnteam" type="submit" id="deleteProjectButton" onclick="confirmDelete()"
+                                        class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 6L5 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" />
+                                            <path d="M5 6L19 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+
+                            </div>
+
+                            <?php
+                        }
+                        ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -182,20 +216,20 @@
                 <select id="projet" name="projet"
                     class="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500">
                     <?php
-                foreach ($projects as $project) {
-                    echo "<option value=\"{$project['Id_Project']}\">{$project['project_name']}</option>";
-                }
-                ?>
+                    foreach ($projects as $project) {
+                        echo "<option value=\"{$project['Id_Project']}\">{$project['project_name']}</option>";
+                    }
+                    ?>
                 </select>
             </div>
             <div class="mb-4">
                 <label for="membresEquipe" class="block text-gray-700 text-sm font-bold mb-2">Team Members:</label>
                 <select id="membresEquipe" name="membresEquipe[]" multiple class="w-full px-1 py-2 border rounded">
-                <?php
-                foreach ($members as $member) {
-                    echo "<option value=\"{$member['id_user']}\">{$member['email']}</option>";
-                }
-                ?>
+                    <?php
+                    foreach ($members as $member) {
+                        echo "<option value=\"{$member['id_user']}\">{$member['email']}</option>";
+                    }
+                    ?>
                 </select>
             </div>
             <button type="submit" name="create_team"
@@ -205,83 +239,47 @@
     </div>
 
     <div id="updateForm" class="hidden mx-auto mt-3 bg-white p-8 rounded w-96 shadow-md max-w-md rounded-2xl">
+        <h2 class="text-2xl text-center mb-6">Update Team</h2>
 
-        <h2 class="text-2xl text-center mb-6">Update Project</h2>
+        <form method="POST" action="index.php?action=UpdateTeam" class="space-y-4">
+            <input hidden type="text" name="team_id" value="<?php echo $teamInfo['Id_Team']; ?>">
 
-        <form method="POST" action="index.php?action=UpdateProject" class="space-y-4">
-            <?php if (!empty($projectForUpdate)):
-                ?>
+            <div>
+                <label for="team_name" class="block text-sm font-medium text-gray-700">Team Name:</label>
+                <input type="text" id="team_name" name="team_name"
+                    class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
+                    value="<?php echo htmlspecialchars($teamInfo['team_name']); ?>" required>
+            </div>
 
-                <input type="hidden" id="name" name="projectId" value="<?php echo $projectForUpdate["Id_Project"]; ?>">
-
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Project Name:</label>
-                    <input type="text" id="name" name="projectname" value="<?php echo $projectForUpdate["project_name"]; ?>"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                </div>
-
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
-                    <textarea id="description" name="projectdescription"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500"
-                        required><?php echo $projectForUpdate["project_description"]; ?></textarea>
-                </div>
-                <div>
-                    <label for="date_creation" class="block text-sm font-medium text-gray-700">Created at:</label>
+            <div class="mb-4">
+                <label for="projet" class="block text-gray-700 text-sm font-bold mb-2">Project for the Team:</label>
+                <select id="projet" name="projet"
+                    class="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500">
                     <?php
-                    // Convertir la date au format DateTime
-                    $createdAt = new DateTime($projectForUpdate["created_at"]);
-                    // Formater la date pour l'afficher dans le champ de formulaire
-                    $formattedDate = $createdAt->format('Y-m-d');
+                    foreach ($projects as $project) {
+                        $selected = ($project['Id_Project'] == $teamInfo['Id_Project']) ? 'selected' : '';
+                        echo "<option value=\"{$project['Id_Project']}\" $selected>{$project['project_name']}</option>";
+                    }
                     ?>
-                    <input type="date" id="date_creation" name="date_creation" value="<?php echo $formattedDate; ?>"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                </div>
+                </select>
+            </div>
 
-                <!-- <div>
-                    <label for="date_creation" class="block text-sm font-medium text-gray-700">Created at:</label>
-                    <input type="date" id="date_creation" name="date_creation"
-                        value="<?php echo $projectForUpdate["created_at"]; ?>"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                </div> -->
-                <div>
-                    <label for="end_date" class="block text-sm font-medium text-gray-700">Deadline:</label>
-                    <input type="date" id="end_date" name="end_date" value="<?php echo $projectForUpdate["deadline"]; ?>"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                </div>
+            <div class="mb-4">
+                <label for="membresEquipe" class="block text-gray-700 text-sm font-bold mb-2">Team Members:</label>
+                <select id="membresEquipe" name="membresEquipe[]" multiple class="w-full px-1 py-2 border rounded">
+                    <?php
+                    foreach ($members as $member) {
+                        $selected = in_array($member['email'], explode(',', $teamInfo['team_members'])) ? 'selected' : '';
+                        echo "<option value=\"{$member['id_user']}\" $selected>{$member['email']}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
 
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
-                    <select id="status" name="status" value="<?php echo $projectForUpdate["project_status"]; ?>"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                        <option value='In Progress'>In Progress</option>
-                        <option value='Completed'>Completed</option>
-                        <option value='On Hold'>On Hold</option>
-                        <option value='Cancelled'>Cancelled</option>
-                        <option value='Pending'>Pending</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="scrum_master" class="block text-sm font-medium text-gray-700">Scrum Master:</label>
-                    <select id="scrum_master" name="scrum_master"
-                        class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:border-blue-500" required>
-                        <?php foreach ($scrumMasters as $scrumMaster): ?>
-                            <option value="<?= $scrumMaster["id_user"] ?>" <?php echo ($projectForUpdate["id_user"] == $scrumMaster["id_user"]) ? 'selected' : ''; ?>>
-                                <?= $scrumMaster["email"] ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <button type="submit"
-                    class="w-full text-white bg-red-700 hover:bg-red-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Update
-                    Project</button>
-
-            </form>
-        <?php else: ?>
-            <p>Aucune equipe trouvé.</p>
-        <?php endif; ?>
+            <button type="submit" name="update_team"
+                class="w-full text-white bg-red-700 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Update
+                Team</button>
+        </form>
     </div>
 
 

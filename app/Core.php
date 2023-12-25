@@ -51,11 +51,31 @@ class Core
                 session_start();
                 $userId = $_SESSION['user_id'];
                 $teamController = new TeamController(new Team());
-                $teamController->handleTeamsForUser($userId);
+
+                if (isset($_GET["showUpdateForm"]) && $_GET["showUpdateForm"] == 1) {
+                    $teamId = isset($_POST["team_id"]) ? $_POST["team_id"] : null;
+                    $teamController->showUpdateForm($teamId, $userId);
+                } else {
+                    $teamController->handleTeamsForUser($userId);
+                }
                 break;
-                case 'create_team':
-                    $teamController = new TeamController(new Team());
-                    $teamController->CreateTeam();
+            case 'create_team':
+                $teamController = new TeamController(new Team());
+                $teamController->CreateTeam();
+                break;
+            case 'UpdateTeam':
+                $teamController = new TeamController(new Team());
+                // Assurez-vous que vous avez l'ID de l'équipe à mettre à jour
+                $teamId = isset($_POST['team_id']) ? $_POST['team_id'] : null;
+                $teamController->updateTeam($teamId);
+                break;
+            case 'deleteteam':
+                $teamController = new TeamController(new Team());
+                $teamController->DeleteTeam();
+                break;
+                case 'logout':
+                    $userController = new UserController(new User());
+                    $userController->logout();
                     break;
             // Add other cases as needed
             default:
