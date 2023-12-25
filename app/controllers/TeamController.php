@@ -11,119 +11,83 @@ class TeamController
         $this->TeamModel = $TeamModel;
     }
 
-    public function showTeamMembers($teamId)
-    {
-        // Assuming $conn is your database connection
-        $members = $this->TeamModel->getTeamMembers($teamId);
-
-        // You can pass $members to your view or do further processing here
-        return $members;
-    }
     public function handleTeamsForUser($userId)
     {
         $userController = new User();
-        $teams = $this->TeamModel->getTeamsForUser($userId);
-        $members = $this->TeamModel->getTeamMembers($userId);
-
+        $teamsData = $this->TeamModel->getTeamsData($userId);
+        $projects = $this->TeamModel->getProjects($userId);
+        $members = $this->TeamModel->getTeamMembers();
         include_once("app/views/team/index.php"); // Include the view file and pass the projects variable
 
     }
-    // public function CreateProject()
-    // {
-    //     $message = '';
-    //     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //         $projectName = $_POST["projectname"];
-    //         $projectDescription = $_POST["projectdescription"];
-    //         $projectStatus = $_POST["status"];
-    //         $created_at = $_POST["date_creation"];
-    //         $deadline = $_POST["end_date"];
-    //         $idUser = $_POST["scrum_master"];
+    public function CreateTeam()
+    {
+        session_start();
+        $userId = $_SESSION['user_id'];
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_team'])) {
+            // Récupérer les données du formulaire
+            $teamName = htmlspecialchars($_POST['team_name']);
+            $projectId = intval($_POST['projet']);
+            $teamMembers = isset($_POST['membresEquipe']) ? $_POST['membresEquipe'] : [];
+
+            // Appeler la méthode pour créer une équipe
+            $teamCreated = $this->TeamModel->createTeam($teamName,$userId, $projectId, $teamMembers);
+            if ($teamCreated) {
+                $message = "l'equipe est ajoutée avec succès";
+                header("Location: index.php?action=teams");
+            }
+        }
+    }
 
 
-    //         $this->projectModel->setProjectName($projectName);
-    //         $this->projectModel->setProjectDescription($projectDescription);
-    //         $this->projectModel->setProjectStatus($projectStatus);
-    //         $this->projectModel->setCreatedAt($created_at);
-    //         $this->projectModel->setDeadline($deadline);
-    //         $this->projectModel->setIdUser($idUser);
+    public function showUpdateForm($teamId,$userId)
+    {
+        // Récupérer les informations de l'équipe à mettre à jour
+        $teamInfo = $this->TeamModel->getTeamInfo($teamId);
+        $members = $this->TeamModel->getTeamMembers();
+        $projects = $this->TeamModel->getProjects($userId);
+        // die(var_dump($teamInfo));
 
+        // Afficher le formulaire de mise à jour avec les informations de l'équipe
+        include_once("app/views/team/index.php");
+    }
 
-    //         try {
-    //             $userController = new User();
-    //             $userController->New_scrum_master($idUser);
-    //             $this->projectModel->CreateProject();
-    //             $message = "Projet a été ajouter avec succès";
+    public function updateTeam($teamId) {
+        // Vérifiez si le formulaire a été soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérez les informations du formulaire POST
+            $newTeamName = htmlspecialchars($_POST['team_name']);
+            $newProjectId = htmlspecialchars($_POST['projet']);
+            $selectedMembers = isset($_POST['membresEquipe']) ? $_POST['membresEquipe'] : [];
+            // Mettre à jour les informations de l'équipe dans le modèle
+            $updateResult = $this->TeamModel->updateTeam($teamId, $newTeamName, $newProjectId, $selectedMembers);
 
-    //             header("Location: index.php?action=project");
-    //             exit;
-    //         } catch (Exception $e) {
-    //             $message = "Erreur lors de la creation du projet. Veuillez réessayer.";
-    //         }
-    //     } else {
-    //         include_once "app/views/Project/index.php";
-    //     }
-    // }
-    // public function RequestUpdate()
-    // {
-    //     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //         $this->projectModel->setProjectId($_POST["id_project"]);
-    //         $projectForUpdate = $this->projectModel->GetProject();
+            if ($updateResult) {
+                echo "Team details updated successfully!";
+                header("Location: index.php?action=teams"); // Rediriger vers la page d'accueil ou une autre page après la mise à jour
+                exit();
+            } else {
+                echo "Error updating team details.";
+            }
+        } else {
+            // Le formulaire n'a pas été soumis, vous pouvez afficher le formulaire de mise à jour ici si nécessaire
+        }
+    }
 
-    //         $userController = new User();
-    //         $scrumMasters = $userController->getScrumMasters();
-
-    //         include_once("app/views/project/index.php"); // Include the view file and pass the projects variable
-    //     } else {
-    //         include_once("index.php?action=project");
-    //     }
-    // }
-
-    // public function UpdateProject()
-    // {
-    //     $message = '';
-
-    //     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //         $projectId = $_POST["projectId"];
-    //         $projectName = $_POST["projectname"];
-    //         $projectDescription = $_POST["projectdescription"];
-    //         $projectStatus = $_POST["status"];
-    //         $created_at = $_POST["date_creation"];
-    //         $deadline = $_POST["end_date"];
-    //         $idUser = $_POST["scrum_master"];
-
-    //         $this->projectModel->setProjectId($projectId);
-    //         $this->projectModel->setProjectName($projectName);
-    //         $this->projectModel->setProjectDescription($projectDescription);
-    //         $this->projectModel->setProjectStatus($projectStatus);
-    //         $this->projectModel->setCreatedAt($created_at);
-    //         $this->projectModel->setDeadline($deadline);
-    //         $this->projectModel->setIdUser($idUser);
-    //         try {
-    //             $this->projectModel->UpdateProject();
-    //             $message = "Projet a été modifie avec succès";
-    //             header("Location: index.php?action=project");
-    //             exit;
-    //         } catch (Exception $e) {
-    //             $message = "Erreur lors de la creation du projet. Veuillez réessayer.";
-    //         }
-    //     }
-    // }
-
-    // public function DeleteProject(){
-    //     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //         $projectId = $_POST["id_project"];
-    //         try {
-    //             $this->projectModel->setProjectId($projectId);
-    //             $this->projectModel->DeleteProject();
-    //             $message = "Projet a été supprime avec succès";
-    //             header("Location: index.php?action=project");
-    //             exit;
-    //         } catch (Exception $e) {
-    //             $message = "Erreur lors de la creation du projet. Veuillez réessayer.";
-    //         }
-    //     }
-    // }
-
+    public function DeleteTeam(){
+        if ($_SERVER["REQUEST_METHOD"] == "POST"&& isset($_POST["deletebtnteam"])) {
+            $teamId = $_POST["team_id"];
+            // die($teamId);
+            try {
+                $this->TeamModel->setTeamId($teamId);
+                $this->TeamModel->DeleteTeam();
+                $message = "Equipe a été supprime avec succès";
+                header("Location: index.php?action=teams");
+                exit;
+            } catch (Exception $e) {
+                $message = "Erreur lors de la suppression de l'equipe. Veuillez réessayer.";
+            }
+        }
+    }
 }
-
 ?>
